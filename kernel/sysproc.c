@@ -6,6 +6,10 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "sysinfo.h"
+
+uint64 accquire_freemem();
+uint64 accquire_nproc();
 
 uint64
 sys_exit(void)
@@ -104,5 +108,25 @@ sys_trace(void) // trace函数的调用入口
     return -1;
   struct proc *p = myproc(); // 获取当前进程
   p->trace_mask = mask;      // 设置进程的trace_mask，使syscall接收
+  return 0;
+}
+
+uint64
+sys_sysinfo(void) // sysinfo函数的调用入口
+{
+  uint64 addr; // user pointer to struct sysinfo
+  struct proc *p = myproc();
+  struct sysinfo info;
+
+  info.freemem = accquire_freemem();       // get free memory
+  info.nproc = accquire_nproc();            // get number of processes
+  
+  // copy a struct sysinfo back to user space
+  if (argaddr(0, &addr) < 0)
+    return -1;
+  
+  if (copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)
+    return -1;
+
   return 0;
 }

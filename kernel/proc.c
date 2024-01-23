@@ -697,3 +697,19 @@ procdump(void)
     printf("\n");
   }
 }
+
+uint64 accquire_nproc() // 获取进程数量
+{
+  struct proc *p;
+  uint64 cnt = 0;
+  for (p = proc; p < &proc[NPROC]; p++) // 遍历当前进程列表
+  {
+    acquire(&p->lock);
+    if (p->state != UNUSED) 
+    {
+      cnt++;
+    }
+    release(&p->lock);
+  }
+  return cnt;
+}
