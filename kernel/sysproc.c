@@ -99,11 +99,10 @@ sys_uptime(void)
 uint64
 sys_trace(void) // trace函数的调用入口
 {
-  int mask;
+  int mask; // 获取trace命令参数，参考exit函数
   if (argint(0, &mask) < 0)
     return -1;
-  struct proc *p = myproc();
-  p->trace_mask = mask;
-  printf("hi, this is trace\n");
+  struct proc *p = myproc(); // 获取当前进程
+  p->trace_mask = mask;      // 设置进程的trace_mask，使syscall接收
   return 0;
 }

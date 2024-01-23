@@ -133,7 +133,7 @@ static uint64 (*syscalls[])(void) = {
 
 static char *syscall_call[] = {
   "fork","exit","wait","pipe","read","kill","exec","fstat","chdir","dup","getpid","sbrk","sleep","uptime","open","write","mknod","unlink","link","mkdir","close","trace"
-};
+}; // 根据系统函数的序号，匹配系统函数的名字
 
 void
 syscall(void) // 系统函数的调用入口
