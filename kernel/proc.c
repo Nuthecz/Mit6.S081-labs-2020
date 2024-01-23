@@ -150,6 +150,7 @@ freeproc(struct proc *p)
   p->killed = 0;
   p->xstate = 0;
   p->state = UNUSED;
+  p->trace_mask = 0; // clear trace mask
 }
 
 // Create a user page table for a given process,
@@ -288,6 +289,9 @@ fork(void)
     if(p->ofile[i])
       np->ofile[i] = filedup(p->ofile[i]);
   np->cwd = idup(p->cwd);
+
+  // add parent's trace mask to child
+  np->trace_mask = p->trace_mask;
 
   safestrcpy(np->name, p->name, sizeof(p->name));
 
